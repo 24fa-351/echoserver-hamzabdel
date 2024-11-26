@@ -1,12 +1,13 @@
+#include <arpa/inet.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <arpa/inet.h>
 
 #define BUFFER_SIZE 1024
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[])
+{
     int port;
     int server_fd;
     int client_fd;
@@ -31,7 +32,8 @@ int main(int argc, char *argv[]) {
     server_addr.sin_addr.s_addr = INADDR_ANY;
     server_addr.sin_port = htons(port);
 
-    if (bind(server_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
+    if (bind(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr))
+        < 0) {
         perror("Bind failed");
         close(server_fd);
         exit(1);
@@ -45,13 +47,14 @@ int main(int argc, char *argv[]) {
     printf("Echo server is listening on port %d\n", port);
 
     while (1) {
-        client_fd = accept(server_fd, (struct sockaddr *)&client_addr, &addr_len);
+        client_fd
+            = accept(server_fd, (struct sockaddr*)&client_addr, &addr_len);
         printf("Client connected\n");
 
         while ((num_bytes = recv(client_fd, buffer, BUFFER_SIZE - 1, 0)) > 0) {
-            buffer[num_bytes] = '\0'; 
+            buffer[num_bytes] = '\0';
             printf("Received: %s", buffer);
-            send(client_fd, buffer, num_bytes, 0); 
+            send(client_fd, buffer, num_bytes, 0);
         }
 
         printf("Client disconnected\n");
